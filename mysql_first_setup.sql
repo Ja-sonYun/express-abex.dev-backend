@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS PROJECTS;
 CREATE TABLE PROJECTS (
 	project_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
 	title VARCHAR(100) NOT NULL,
+	url VARCHAR(512) NOT NULL,
 	description MEDIUMTEXT NOT NULL,
 	status VARCHAR(25) NOT NULL,
 	last_modified DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -25,3 +26,7 @@ CREATE TABLE PROJECT_TODOS (
 	created DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (project_id) REFERENCES PROJECTS(project_id) ON DELETE CASCADE
 );
+
+INSERT INTO PROJECTS (title, url, description, status) VALUES ('Image Merger', 'imagemerger.abex.dev', 'Get all images from given url and merge them to an image. (React)', 'Done..?');
+INSERT INTO PROJECTS (title, url, description, status) VALUES ('Online Hex Editor', 'hexeditor.abex.dev', 'Online Hex Editor with hexadecimal-decimal-binary-ascii converter. (Vue)', 'On progress');
+INSERT INTO PROJECTS (title, url, description, status) VALUES ('Exif Analyzer', 'exifanalyzer.abex.dev', 'Extract exif data from given jpeg file and update it. (Vue)', 'On progress');
