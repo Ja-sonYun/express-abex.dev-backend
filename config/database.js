@@ -21,7 +21,7 @@ module.exports = class REST {
 			});
 
 			if(rows.length > 0) {
-				res.write(JSON.stringify([rows]),encoding='utf8');
+				res.write(JSON.stringify([rows]));
 			} else {
 				res.write(JSON.stringify([]));
 			}
