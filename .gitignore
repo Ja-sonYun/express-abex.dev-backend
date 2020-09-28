@@ -2,3 +2,5 @@
 *.json
 *.swp
 node_modules/
+
+!package.json
