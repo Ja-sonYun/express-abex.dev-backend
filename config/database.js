@@ -16,7 +16,6 @@ module.exports = class REST {
 			if(error) throw error;
 
 			res.writeHead(200, {
-				'Access-Control-Allow-Origin:*',
 				'Content-Type':'application/json',
 				'charset':'utf-8'
 			});
