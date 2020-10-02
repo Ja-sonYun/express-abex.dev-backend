@@ -29,4 +29,5 @@ module.exports = class REST {
 			this.connection.destroy();
 		});
 	}
+
 }
