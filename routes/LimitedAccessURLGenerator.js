@@ -58,7 +58,6 @@ function checkIsUniqueString(rest) {
 	return new Promise(function(resolve, reject) {
 		url = generateRandomString();
 		rest.executeQuery(`select * from LINKLIST where originURL = '${url}';`).then((rows) => {
-			console.log(rows);
 			if(rows.length != 0) {
 				resolve(checkIsUniqueString(rest));
 			} else {

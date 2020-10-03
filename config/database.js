@@ -14,7 +14,6 @@ module.exports = class REST {
 		let that = this; // bind that
 		return new Promise(function(resolve, reject) {
 			that.connection.query(query, (error, rows, fields) => {
-				console.log(rows);
 				if(error) reject(error);
 				resolve(rows);
 			});
