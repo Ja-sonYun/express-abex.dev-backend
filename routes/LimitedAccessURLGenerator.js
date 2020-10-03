@@ -6,9 +6,7 @@ var generateRandomString = require('../modules/generateRandomString.js');
 
 router.get('/l/:origin', function(req, res, next) {
 	let rest = new REST();
-	console.log(req.params.origin);
 	rest.executeQuery(`select * from LINKLIST where originURL = '${req.params.origin}' limit 1`).then((row) => {
-		console.log('asdasd',row[0]);
 
 		if(row[0].visits_max > row[0].visited) {
 			rest.executeQueryWithoutReturn(`update LINKLIST set visited=visited+1 where originURL = '${req.params.origin}';`);
@@ -30,6 +28,10 @@ router.get('/l/:origin', function(req, res, next) {
 
 router.post('/generateurl', function(req, res, next) {
 	let rest = new REST();
+	if(!validURL(req.body.dest) || req.body.limit > 100) {
+		res.send({ error: 'wrong request type!' });
+		return;
+	}
 
 	// get random and unique string for wrap the url
 	checkIsUniqueString(rest).then((url) => {
@@ -38,17 +40,10 @@ router.post('/generateurl', function(req, res, next) {
 		let dest = req.body.dest;
 
 		let limit = req.body.limit;
-		// if(limit > 100) {
-		// // error return
-		// }
-		console.log(url, limit);
 		rest.executeQuery(`insert into LINKLIST(originURL, destinationURL, visits_max) values('${url}', '${dest}', '${limit}');`).then((status) => {
 			if(status.insertId == undefined) {
-				console.log('error');
-				// res.send(500);
-				res.status(500);
+				res.send({ error: 'This url is expired or doesn\'t exist.' });
 			} else {
-				// res.json(200, {status: "ok", wrappedURL: url});
 				res.status(200).json({status: "ok", wrappedURL: url});
 			}
 		});
@@ -72,5 +67,15 @@ function checkIsUniqueString(rest) {
 		});
 	})
 };
+
+function validURL(str) {
+	let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+		'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+		'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+		'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+		'(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+		'(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+	return !!pattern.test(str);
+}
 
 module.exports = router;
