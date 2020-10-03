@@ -10,6 +10,24 @@ module.exports = class REST {
 	// #sqlInjectionByPass(query) {
 	// }
 
+	executeQuery(query) {
+		let that = this; // bind that
+		return new Promise(function(resolve, reject) {
+			that.connection.query(query, (error, rows, fields) => {
+				console.log(rows);
+				if(error) reject(error);
+				resolve(rows);
+			});
+		})
+	}
+
+	executeQueryWithoutReturn(query) {
+		this.connection.query(query, (error, rows, fields) => {
+			if(error) return error;
+			return true;
+		})
+	}
+
 	executeAndReturn(query, res) {
 		this.connection.connect();
 		this.connection.query(query, (error, rows, fields) => {
