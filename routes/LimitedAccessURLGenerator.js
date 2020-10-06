@@ -13,17 +13,19 @@ router.get('/l/:origin', function(req, res, next) {
 	let rest = new REST();
 	res.locals.rest = rest;
 	rest.executeQuery(`select * from LINKLIST where originURL = '${req.params.origin}' limit 1`).then((row) => {
-		res.locals.row = row[0];
-		next();
-	}).catch((error) => {
-		res.send({ error: 'This url is expired or doesn\'t exist.' });
+		if(row.length == 0) { // target link does not exist
+			res.send({ error: 'This url is expired or doesn\'t exist.' });
+		} else {
+			res.locals.row = row[0];
+			next();
+		}
 	});
 	// Checking the user was visited.
 }, function(req, res, next) {
-	res.locals.rest.executeQuery(`select * from LINKVISITEDUSERLIST where user_ip = '${req.ip}' and originURL = '${req.params.origin}';`).then((row) => {
+	res.locals.rest.executeQuery(`select * from LINKVISITEDUSERLIST where user_ip = 'test2' and originURL = '${req.params.origin}';`).then((row) => {
 		console.log(row);
 		if(row.length == 0) {
-			res.locals.rest.executeQueryWithoutReturn(`insert into LINKVISITEDUSERLIST(originURL, user_ip) values('${req.params.origin}', '${req.ip}');`);
+			res.locals.rest.executeQueryWithoutReturn(`insert into LINKVISITEDUSERLIST(originURL, user_ip) values('${req.params.origin}', 'test2');`);
 			next();
 		} else {
 			res.send({ error: 'You already visited this website. If not, please try with cellular data.' });
