@@ -1,11 +1,7 @@
-let a = new Cookie('sd');
-
-a.set('anwead', 1);
-
-console.log(a.get());
-
 const ORIGIN = document.title;
-let visited = new Cookie(ORIGIN);
-if(visited.get()) {
 
+if(confirm("We're collecting visitors ip addresses for prevent multiple access. If you don't want to pass your ip address to our server, please click { Cancel } button. To continue, please click { OK } button. Ip addresses will be deleted when the target url is expired.")) {
+	window.location.href = "https://api.abex.dev/laug/l/" + ORIGIN + '/go';
+} else {
+	window.history.back();
 }

@@ -4,12 +4,15 @@ var router = express.Router();
 var REST = require('../config/database.js');
 var generateRandomString = require('../modules/generateRandomString.js');
 
-	// res.render('redirect', {
-	//     origin: req.params.origin,
-	// });
+
+router.get('/l/:origin', function(req, res, next) {
+	res.render('redirect', {
+		origin: req.params.origin,
+	});
+});
 
 // Checking the origin url is exist on the database.
-router.get('/l/:origin', function(req, res, next) {
+router.get('/l/:origin/go', function(req, res, next) {
 	let rest = new REST();
 	res.locals.rest = rest;
 	rest.executeQuery(`select * from LINKLIST where originURL = '${req.params.origin}' limit 1`).then((row) => {
@@ -33,7 +36,7 @@ router.get('/l/:origin', function(req, res, next) {
 	})
 });
 
-router.get('/l/:origin', function(req, res, next) {
+router.get('/l/:origin/go', function(req, res, next) {
 	if(res.locals.row.visits_max > res.locals.row.visited) {
 		res.locals.rest.executeQueryWithoutReturn(`update LINKLIST set visited=visited+1 where originURL = '${req.params.origin}';`);
 		if(res.locals.row.visits_max-1 == res.locals.row.visited) {
