@@ -4,35 +4,45 @@ var router = express.Router();
 var REST = require('../config/database.js');
 var generateRandomString = require('../modules/generateRandomString.js');
 
-
-router.get('/l/:origin', function(req, res, next) {
-	console.log(req.ip);
 	// res.render('redirect', {
 	//     origin: req.params.origin,
 	// });
-});
 
-router.get('/l/:origin/y', function(req, res, next) {
+// Checking the origin url is exist on the database.
+router.get('/l/:origin', function(req, res, next) {
 	let rest = new REST();
+	res.locals.rest = rest;
 	rest.executeQuery(`select * from LINKLIST where originURL = '${req.params.origin}' limit 1`).then((row) => {
-
-		if(row[0].visits_max > row[0].visited) {
-			rest.executeQueryWithoutReturn(`update LINKLIST set visited=visited+1 where originURL = '${req.params.origin}';`);
-			if(row[0].visits_max-1 == row[0].visited) {
-				rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
-			}
-			// res.redirect(row[0].destinationURL);
-			console.log(row[0].destinationURL);
-			res.render('redirect', {destination: row[0].destinationURL});
-		} else {
-			// reached max
-			rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
-			res.send({ error: 'This url is expired or doesn\'t exist.' });
-		}
+		res.locals.row = row[0];
+		next();
 	}).catch((error) => {
-		//page link expired
 		res.send({ error: 'This url is expired or doesn\'t exist.' });
 	});
+	// Checking the user was visited.
+}, function(req, res, next) {
+	res.locals.rest.executeQuery(`select * from LINKVISITEDUSERLIST where user_ip = '${req.ip}' and originURL = '${req.params.origin}';`).then((row) => {
+		console.log(row);
+		if(row.length == 0) {
+			res.locals.rest.executeQueryWithoutReturn(`insert into LINKVISITEDUSERLIST(originURL, user_ip) values('${req.params.origin}', '${req.ip}');`);
+			next();
+		} else {
+			res.send({ error: 'You already visited this website. If not, please try with cellular data.' });
+		}
+	})
+});
+
+router.get('/l/:origin', function(req, res, next) {
+	if(res.locals.row.visits_max > res.locals.row.visited) {
+		res.locals.rest.executeQueryWithoutReturn(`update LINKLIST set visited=visited+1 where originURL = '${req.params.origin}';`);
+		if(res.locals.row.visits_max-1 == res.locals.row.visited) {
+			res.locals.rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
+		}
+		res.redirect(res.locals.row.destinationURL);
+	} else {
+		// reached max
+		res.locals.rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
+		res.send({ error: 'This url is expired or doesn\'t exist.' });
+	}
 });
 
 
