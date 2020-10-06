@@ -4,7 +4,17 @@ var router = express.Router();
 var REST = require('../config/database.js');
 var generateRandomString = require('../modules/generateRandomString.js');
 
+
 router.get('/l/:origin', function(req, res, next) {
+	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+
+	console.log(ip);
+	// res.render('redirect', {
+	//     origin: req.params.origin,
+	// });
+});
+
+router.get('/l/:origin/y', function(req, res, next) {
 	let rest = new REST();
 	rest.executeQuery(`select * from LINKLIST where originURL = '${req.params.origin}' limit 1`).then((row) => {
 
@@ -13,7 +23,9 @@ router.get('/l/:origin', function(req, res, next) {
 			if(row[0].visits_max-1 == row[0].visited) {
 				rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
 			}
-			res.redirect(row[0].destinationURL);
+			// res.redirect(row[0].destinationURL);
+			console.log(row[0].destinationURL);
+			res.render('redirect', {destination: row[0].destinationURL});
 		} else {
 			// reached max
 			rest.executeQueryWithoutReturn(`delete from LINKLIST where originURL = '${req.params.origin}';`);
