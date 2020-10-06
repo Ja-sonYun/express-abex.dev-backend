@@ -22,10 +22,10 @@ router.get('/l/:origin', function(req, res, next) {
 	});
 	// Checking the user was visited.
 }, function(req, res, next) {
-	res.locals.rest.executeQuery(`select * from LINKVISITEDUSERLIST where user_ip = 'test2' and originURL = '${req.params.origin}';`).then((row) => {
+	res.locals.rest.executeQuery(`select * from LINKVISITEDUSERLIST where user_ip = '${req.ip}' and originURL = '${req.params.origin}';`).then((row) => {
 		console.log(row);
 		if(row.length == 0) {
-			res.locals.rest.executeQueryWithoutReturn(`insert into LINKVISITEDUSERLIST(originURL, user_ip) values('${req.params.origin}', 'test2');`);
+			res.locals.rest.executeQueryWithoutReturn(`insert into LINKVISITEDUSERLIST(originURL, user_ip) values('${req.params.origin}', '${req.ip}');`);
 			next();
 		} else {
 			res.send({ error: 'You already visited this website. If not, please try with cellular data.' });
