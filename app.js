@@ -16,6 +16,9 @@ var cors = require('cors');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// get visitors ip
+app.set('trust proxy', true);
+
 app.use(logger('dev'));
 app.use(express.json());
 //app.use(cors({

@@ -6,9 +6,7 @@ var generateRandomString = require('../modules/generateRandomString.js');
 
 
 router.get('/l/:origin', function(req, res, next) {
-	var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-	console.log(ip);
+	console.log(req.ip);
 	// res.render('redirect', {
 	//     origin: req.params.origin,
 	// });
