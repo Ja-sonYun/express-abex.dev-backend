@@ -6,7 +6,7 @@ var generateRandomString = require('../modules/generateRandomString.js');
 
 
 router.get('/l/:origin', function(req, res, next) {
-	res.render('redirect', {
+	res.render('laug/redirect', { // _local for debuggin
 		origin: req.params.origin,
 	});
 });

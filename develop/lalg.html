@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Limited access link generator</title>
+</head>
+<body>
+	<div id="header">
+		<p class="header-title">Limited access link generator</p>
+	</div>
+
+	<div id="main-section">
+		<input id="url-area" name="dest" type="text" placeholder="url">
+		<input id="limit" name="dest" type="text" placeholder="limit">
+		<button id="generate">Generate!</button>
+	</div>
+
+	<div id="result"></div>
+
+</body>
+</html>
+<script>
+	//let domain = "https://api.abex.dev/laug";
+	let domain = "http://localhost:3000/laug";
+	document.getElementById("generate").addEventListener("click", generate);
+
+
+	function generate() {
+		let dest = document.getElementById("url-area").value;
+		let limit = document.getElementById("limit").value*1;
+		if(!validURL(dest)) {
+			console.log(dest);
+			return;
+		}
+		if(!isNumeric(limit) || limit > 100 || limit < 0) {
+			console.log(limit);
+			return;
+		}
+
+		let data = { dest: dest , limit: limit };
+
+		let http = new XMLHttpRequest();
+		let apiURL = domain + "/generateurl";
+		http.onload = () => {
+			let res = JSON.parse(http.response);
+			let result = document.createElement("a");
+			if(res.status == 'ok') {
+				result.innerHTML = domain + "/l/" + res.wrappedURL;
+				result.id = "generatedUrl";
+				createSnackBar('Link generated. click here to copy generated url.');
+			} else { // this will be error
+				result.innerHTML = res.error;
+			}
+			document.getElementById("result").appendChild(result);
+		};
+
+		http.open("POST", apiURL);
+		http.setRequestHeader('Content-Type', 'application/json');
+		http.send(JSON.stringify(data));
+	}
+
+	function copyLink() {
+		let element = document.getElementById("generatedUrl");
+		let linkToCopy = element.innerText;
+		let myTemporaryInputElement = document.createElement("input");
+
+		myTemporaryInputElement.type = "text";
+		myTemporaryInputElement.value = linkToCopy;
+
+		document.body.appendChild(myTemporaryInputElement);
+		myTemporaryInputElement.select();
+		document.execCommand("Copy");
+		document.body.removeChild(myTemporaryInputElement);
+
+		createSnackBar('Link Copied.');
+
+	}
+
+	function createSnackBar(message) {
+		if(document.getElementById("snackbar")) {
+			document.getElementById("snackbar").remove();
+		}
+		let snack_wrap = document.createElement("div");
+		snack_wrap.id = "snackbar";
+		snack_wrap.className = "snack-wrap";
+		snack_wrap.addEventListener("click", copyLink);
+
+		let checkbox = document.createElement("input");
+		checkbox.type = "checkbox";
+		checkbox.className = "snackclose animated";
+		checkbox.id = "close";
+
+		let label = document.createElement("label");
+		label.className = "snackable animated";
+		label.setAttribute("for", "close");
+
+		let snackbar_label = document.createElement("div");
+		snackbar_label.className = "snackbar animated";
+
+		let string = document.createElement("p");
+		string.innerText = message;
+
+		snack_wrap.appendChild(checkbox);
+		snack_wrap.appendChild(label);
+		snackbar_label.appendChild(string);
+		snack_wrap.appendChild(snackbar_label);
+		document.body.appendChild(snack_wrap);
+	}
+
+	function isNumeric(str) {
+		if (typeof str != "number") return false
+		return !isNaN(str) && !isNaN(parseFloat(str))
+	}
+
+	function validURL(str) {
+		let pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+			'((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+			'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+			'(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+			'(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+		return !!pattern.test(str);
+	}
+
+</script>
+<style>
+#header {
+	padding: 200px;
+	text-align: center;
+}
+.header-title {
+	font-size: 30px;
+}
+#main-section {
+	text-align:center;
+	margin: auto;
+}
+
+.snack-wrap {
+	display:block;
+	position:fixed;
+	bottom:0px;
+	left:10px;
+	padding:0px;
+}
+
+.snackbar {
+	display:block;
+	background:#222;
+	border:#f2f2f2;
+	padding:10px 40px 10px 20px;
+	color:#fff;
+	font-family:Arial;
+	position:relative;
+	left:0px;
+	bottom:-70px;
+	transition: bottom 0.5s ease-in-out;
+	z-index:9;
+}
+.snackclose, label {
+	bottom:-70px;
+	position:absolute;
+	border:0;
+}
+.snackclose {
+	display:none;
+	z-index:10;
+}
+label {
+	z-index:11;
+	display:block;
+	width:100%;
+	height:100%;
+	color:rgba(255,255,255,0.8);
+	cursor:pointer;
+}
+.animated {
+	animation-name: snackbar-show;
+	animation-duration: 2s;
+	animation-direction: forwards;
+	animation-timing-function: ease-in-out;
+	animation-delay:1s;
+	animation-fill-mode: forwards;
+}
+.snackclose:checked~.snackbar, .snackclose:checked, .snackclose:checked+label {
+	animation-name: snackbar-hide;
+	animation-delay:0s;
+}
+@keyframes snackbar-show {
+	0%{ bottom:-70px;  }
+	90%, 95% {bottom:15px; }
+	92.5%, 100% {bottom:10px; }
+}
+@keyframes snackbar-hide {
+	0%, 7.5% {bottom:10px; }
+	5%,10% {bottom:15px; }
+	100% {bottom:-70px; }
+}
+</style>

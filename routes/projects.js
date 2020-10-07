@@ -1,8 +1,8 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var REST = require('../config/database.js');
-
+const REST = require('../config/database.js');
+const WhiteListMiddleware = require('../middlewares/WhiteListMiddleware.js');
 
 router.get('/get', function(req, res, next) {
 	let getResult = new REST();
@@ -22,5 +22,13 @@ router.post('/posttodo', function(req, res, next) {
 });
 
 
+// develop
+let pathToDev = (filename) => {
+	return __dirname.slice(0, -6) + 'develop/' + filename;
+}
+
+router.get('/dev/laug', [WhiteListMiddleware], function (req, res, next) {
+	res.sendFile(pathToDev('lalg.html'));
+});
 
 module.exports = router;
