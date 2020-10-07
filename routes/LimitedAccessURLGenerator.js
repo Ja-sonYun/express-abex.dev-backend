@@ -53,7 +53,7 @@ router.get('/l/:origin/go', function(req, res, next) {
 
 router.post('/generateurl', function(req, res, next) {
 	let rest = new REST();
-	if(!validURL(req.body.dest) || req.body.limit > 100) {
+	if(!validURL(req.body.dest) || req.body.limit > 100 || req.body.limit < 0) {
 		res.send({ error: 'wrong request type!' });
 	} else {
 		res.locals.rest = rest;
