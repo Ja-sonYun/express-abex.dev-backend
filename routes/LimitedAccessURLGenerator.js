@@ -55,26 +55,34 @@ router.post('/generateurl', function(req, res, next) {
 	let rest = new REST();
 	if(!validURL(req.body.dest) || req.body.limit > 100) {
 		res.send({ error: 'wrong request type!' });
-		return;
+	} else {
+		res.locals.rest = rest;
+		next();
 	}
+}, function(req, res, next) {
+	res.locals.rest.executeQuery(`select * from LINKLIST where created_by = '${req.ip}';`).then((row) => {
+		if(row.length < 10) {
+			next();
+		} else {
+			res.send({ error: 'you already generate 10 links. If not, please try with celluar data.' });
+		}
+	})
+});
 
+router.post('/generateurl', function(req, res, next) {
 	// get random and unique string for wrap the url
-	checkIsUniqueString(rest).then((url) => {
-
+	checkIsUniqueString(res.locals.rest).then((url) => {
 		// destination url that got from user
 		let dest = req.body.dest;
-
 		let limit = req.body.limit;
-		rest.executeQuery(`insert into LINKLIST(originURL, destinationURL, visits_max) values('${url}', '${dest}', '${limit}');`).then((status) => {
+		res.locals.rest.executeQuery(`insert into LINKLIST(originURL, destinationURL, visits_max, created_by) values('${url}', '${dest}', '${limit}', '${req.ip}');`).then((status) => {
 			if(status.insertId == undefined) {
 				res.send({ error: 'This url is expired or doesn\'t exist.' });
 			} else {
 				res.status(200).json({status: "ok", wrappedURL: url});
 			}
 		});
-
 	});
-
 });
 
 
