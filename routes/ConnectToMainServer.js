@@ -9,9 +9,7 @@ router.get('/', function(req, res, next) {
 	console.log('sd');
 	let rest = new REST();
 	rest.executeQuery(`select * from ENV where _key = 'redirectToHomeServer' limit 1;`).then((row) => {
-		console.log(row);
 		isOnline((o) => {
-			console.log(o);
 			if(o) {
 				res.redirect(row[0]._value);
 			} else {
