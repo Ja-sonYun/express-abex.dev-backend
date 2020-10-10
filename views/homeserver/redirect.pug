@@ -1,9 +1,80 @@
 doctype html
 html
-  head
-    title redirecting to a server...
-  body
-    p redirecting to a server. please wait just a while.
-    script(src='https://unpkg.com/axios/dist/axios.min.js')
-    script
-      include redirect.js
+	head
+		title redirecting to a server...
+	body
+		.loadingSection
+			.face-load
+				div
+				div
+				div
+				div
+			p.text currently trying to generate new link.
+			p.text This will takes 2~10 seconds.
+
+		script(src='https://unpkg.com/axios/dist/axios.min.js')
+		script
+			include redirect.js
+
+		style(type='text/css').
+			body{
+				background:#3B5998
+
+			}
+			p.text{
+				color:white;
+				font-family: Arial, Helvetica, sans-serif;
+				font-size: 22px;
+				text-align: center;
+			}
+			.face-load{
+				display:flex;
+				width:50px;
+				margin:20% auto 2%
+
+			}
+			.face-load div{
+				width:6px;
+				height:30px;
+				background:#fff;
+				margin-right:2px
+
+			}
+			@keyframes face-load {
+				0%,100% {
+					transform: scaley(1);
+					opacity:1
+
+				}
+				50% {
+				transform: scaley(.4);
+				opacity:0.1
+
+				}
+
+			}
+
+			.face-load>div:nth-child(1) {
+				animation: face-load 1s -.4s infinite cubic-bezier(.2,.68,.18,1.08)
+
+			}
+
+			.face-load>div:nth-child(2) {
+				animation: face-load 1s -.3s infinite cubic-bezier(.2,.68,.18,1.08)
+
+			}
+
+			.face-load>div:nth-child(3) {
+				animation: face-load 1s -.2s infinite cubic-bezier(.2,.68,.18,1.08)
+
+			}
+
+			.face-load>div:nth-child(4) {
+				animation: face-load 1s -.1s infinite cubic-bezier(.2,.68,.18,1.08)
+
+			}
+
+			.face-load>div {
+				animation-fill-mode: both
+
+			}

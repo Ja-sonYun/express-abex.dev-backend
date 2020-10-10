@@ -6,7 +6,6 @@ var REST = require('../config/database.js');
 var isOnline = require('../modules/isOnline.js');
 
 router.get('/', function(req, res, next) {
-	console.log('sd');
 	let rest = new REST();
 	rest.executeQuery(`select * from ENV where _key = 'redirectToHomeServer' limit 1;`).then((row) => {
 		isOnline((o) => {
