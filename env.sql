@@ -1,0 +1,10 @@
+USE aws_abex;
+
+DROP TABLE IF EXISTS ENV;
+CREATE TABLE ENV (
+	id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	_key VARCHAR(30) NOT NULL,
+	_value VARCHAR(100) NOT NULL
+);
+
+INSERT INTO ENV(_key, _value) values('redirectToHomeServer', 'none');
