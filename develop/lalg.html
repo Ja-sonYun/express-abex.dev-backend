@@ -12,8 +12,8 @@
 	</div>
 
 	<div id="main-section">
-		<input id="url-area" name="dest" type="text" placeholder="url">
-		<input id="limit" name="dest" type="text" placeholder="limit">
+		<input autofocus="true" id="url-area" name="dest" type="text" placeholder="url">
+		<input autofocus="true" id="limit" name="dest" type="text" placeholder="limit">
 		<br>
 		<div id="buttonwrapper">
 			<button id="generate">Generate!</button>
@@ -40,11 +40,11 @@
 		let dest = document.getElementById("url-area").value;
 		let limit = document.getElementById("limit").value*1;
 		if(!validURL(dest)) {
-			console.log(dest);
+			alert('wrong url!')
 			return;
 		}
 		if(!isNumeric(limit) || limit > 100 || limit < 0) {
-			console.log(limit);
+			alert('limit must be a number. (0 ~ 100)');
 			return;
 		}
 
