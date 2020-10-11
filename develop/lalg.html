@@ -6,17 +6,27 @@
 </head>
 <body>
 	<div id="header">
+		<p id="abex"><a class="AbutBlack" href="https://abex.dev">abex.dev</a></p>
 		<p class="header-title">Limited access link generator</p>
 	</div>
 
 	<div id="main-section">
 		<input id="url-area" name="dest" type="text" placeholder="url">
 		<input id="limit" name="dest" type="text" placeholder="limit">
-		<button id="generate">Generate!</button>
+		<br>
+		<div id="buttonwrapper">
+			<button id="generate">Generate!</button>
+		</div>
+
+		<div id="result"></div>
 	</div>
 
-	<div id="result"></div>
 
+	<div id="footer">
+		<hr>
+		<h3>By Jasonyun <a href="https://github.com/Ja-sonYun">Github</a> | <a href="https://abex.dev">ABEX</a></h3>
+		<br>
+	</div>
 </body>
 </html>
 <script>
@@ -124,16 +134,83 @@
 
 </script>
 <style>
+body {
+	font-family: Arial, Helvetica, sans-serif;
+	position: relative;
+	min-height: 100vh;
+}
+
+#abex {
+	position: absolute;
+	text-align: bold;
+	margin-top: -15px;
+	padding-left: 10px;
+	font-family: "Lucida Console", Courier, monospace;
+}
+
+.AbutBlack {
+	color: black;
+}
+
+#main-section {
+	padding-bottom: 50px;
+}
+
+#main-section input {
+	border: 1px solid #ddd;
+	padding: 8px 16px;
+}
+
+#main-section #limit {
+	width: 40px;
+	margin-left: -8px;
+}
+
+#main-section #buttonwrapper {
+	padding-top: 30px;
+}
+
+#main-section #buttonwrapper #generate {
+	background-color: gray;
+	border-radius: 10px;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	margin: 4px 2px;
+	opacity: 0.6;
+	transition: 0.3s;
+	display: inline-block;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+#main-section #buttonwrapper #generate:hover {
+	opacity: 1;
+}
+
 #header {
-	padding: 200px;
 	text-align: center;
 }
 .header-title {
+	padding: 150px;
 	font-size: 30px;
 }
 #main-section {
 	text-align:center;
 	margin: auto;
+}
+
+#footer {
+	text-align:center;
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 5px;
+	font-size: 12px;
+	color: gray;
+	font-family: 'Courier New';
+	font-variant: small-caps;
 }
 
 .snack-wrap {
