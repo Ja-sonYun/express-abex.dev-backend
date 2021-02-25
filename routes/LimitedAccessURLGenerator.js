@@ -61,11 +61,13 @@ router.post('/generateurl', function(req, res, next) {
 	}
 }, function(req, res, next) {
 	res.locals.rest.executeQuery(`select * from LINKLIST where created_by = '${req.ip}';`).then((row) => {
-		if(row.length < 10) {
-			next();
-		} else {
-			res.send({ error: 'you already generate 10 links. If not, please try with celluar data.' });
-		}
+    next();
+    // TODO:DEVMODE
+		// if(row.length < 10) {
+		//   next();
+		// } else {
+		//   res.send({ error: 'you already generate 10 links. If not, please try with celluar data.' });
+		// }
 	})
 });
 
